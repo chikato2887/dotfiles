@@ -1,0 +1,1 @@
+/Users/chikato/.config/nvim/init.vim
