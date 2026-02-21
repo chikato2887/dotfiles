@@ -19,16 +19,19 @@ autoload -Uz _zinit
 ### Plugins
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
-zinit ice depth=1
-zinit light jeffreytse/zsh-vi-mode
 
 ### fzf (Ctrl+R: 履歴, Ctrl+T: ファイル, Ctrl+G: ディレクトリ移動)
 export FZF_DEFAULT_OPTS="--bind 'ctrl-j:down,ctrl-k:up'"
-# zsh-vi-mode がキーバインドを上書きするので、初期化後に fzf を読み込む
+# zsh-vi-mode がキーバインドを上書きするので、初期化後に読み込む
 function zvm_after_init() {
   source <(fzf --zsh)
   bindkey '^G' fzf-cd-widget
+  autoload -Uz compinit
+  compinit
 }
+
+zinit ice depth=1
+zinit light jeffreytse/zsh-vi-mode
 
 ### PATH
 export PATH="$HOME/.local/bin:$PATH"
