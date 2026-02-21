@@ -1,11 +1,5 @@
-export PATH="/usr/local/opt/qt/bin:$PATH"
 export RUBY_CONFIGURE_OPTS="--with-openssl-dir=$(brew --prefix openssl@1.1)"
-source $(brew --prefix nvm)/nvm.sh
 alias "vim"="nvim"
-alias "ctags"="`brew --prefix`/bin/ctags"
-
-# シェルのキーバインドをvimっぽく
-bindkey -v
 
 ### Added by Zinit's installer
 if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
@@ -20,34 +14,23 @@ source "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-    zdharma-continuum/zinit-annex-as-monitor \
-    zdharma-continuum/zinit-annex-bin-gem-node \
-    zdharma-continuum/zinit-annex-patch-dl \
-    zdharma-continuum/zinit-annex-rust
-
 ### End of Zinit's installer chunk
 
-source ~/.config/jovial.zsh-theme
-
-zinit snippet OMZ::lib/git.zsh
+### Plugins
 zinit light zsh-users/zsh-autosuggestions
-zinit light zdharma/fast-syntax-highlighting
-zinit light zdharma/history-search-multi-word
+zinit light zsh-users/zsh-syntax-highlighting
 zinit ice depth=1
 zinit light jeffreytse/zsh-vi-mode
-ZSH_THEME="jovial"
 
-function peco-history-selection() {
-    BUFFER=`history -n 1 | tail -r  | awk '!a[$0]++' | peco`
-    CURSOR=$#BUFFER
-    zle reset-prompt
+### fzf (Ctrl+R: 履歴, Ctrl+T: ファイル, Ctrl+G: ディレクトリ移動)
+export FZF_DEFAULT_OPTS="--bind 'ctrl-j:down,ctrl-k:up'"
+# zsh-vi-mode がキーバインドを上書きするので、初期化後に fzf を読み込む
+function zvm_after_init() {
+  source <(fzf --zsh)
+  bindkey '^G' fzf-cd-widget
 }
- 
-zle -N peco-history-selection
-bindkey '^R' peco-history-selection
 
-echo 'export PATH="/usr/local/opt/openjdk@11/bin:$PATH"' >> ~/.zshrc
-export PATH="/usr/local/opt/openjdk@11/bin:$PATH"
+### PATH
+export PATH="$HOME/.local/bin:$PATH"
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
