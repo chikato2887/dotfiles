@@ -17,6 +17,9 @@ autoload -Uz _zinit
 
 ### End of Zinit's installer chunk
 
+### WORDCHARS (vim風のword単位移動にするため記号を除外)
+WORDCHARS=''
+
 ### Plugins
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
@@ -29,6 +32,12 @@ export FZF_DEFAULT_OPTS="--bind 'ctrl-j:down,ctrl-k:up'"
 function zvm_after_init() {
   source <(fzf --zsh)
   bindkey '^G' fzf-cd-widget
+
+  # Vim風移動キーバインド (vicmd = ノーマルモード)
+  bindkey -M vicmd 'H' vi-backward-blank-word
+  bindkey -M vicmd 'L' vi-forward-blank-word
+  bindkey -M vicmd '^H' vi-backward-word
+  bindkey -M vicmd '^L' vi-forward-word
 }
 
 ### PATH

@@ -17,7 +17,17 @@ curl https://get.volta.sh | bash
 volta install node
 ```
 
-### 3. シンボリックリンクを作成
+### 3. Nerd Font のインストール (任意)
+
+vim-devicons のアイコン表示に必要。
+
+```sh
+brew install --cask font-hack-nerd-font
+```
+
+インストール後、ターミナルのフォント設定を Nerd Font に変更する。
+
+### 4. シンボリックリンクを作成
 
 ```sh
 DOTFILES=~/workspace/dotfiles
@@ -29,7 +39,7 @@ ln -sf $DOTFILES/init.vim ~/.config/nvim/init.vim
 ln -sf $DOTFILES/coc-settings.json ~/.config/nvim/coc-settings.json
 ```
 
-### 4. シェルを再起動
+### 5. シェルを再起動
 
 ```sh
 exec zsh
@@ -37,7 +47,7 @@ exec zsh
 
 Zinit と Zsh プラグインは初回起動時に自動インストールされる。
 
-### 5. Neovim プラグインのインストール
+### 6. Neovim プラグインのインストール
 
 [vim-plug](https://github.com/junegunn/vim-plug) を入れてからプラグインをインストールする。
 
@@ -47,24 +57,14 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 nvim +PlugInstall +qall
 ```
 
-### 6. Nerd Font のインストール (任意)
-
-vim-devicons のアイコン表示に必要。
-
-```sh
-brew install --cask font-hack-nerd-font
-```
-
-ターミナルのフォント設定を Nerd Font に変更する。
-
 ## 構成
 
-| ファイル | 内容 |
-|---|---|
-| `.zshrc` | Zsh (Zinit + fzf + vi-mode) |
-| `.tmux.conf` | tmux (Kanagawa-Dragon テーマ + Vim風操作) |
-| `init.vim` | Neovim (vim-plug + coc.nvim + fzf) |
-| `coc-settings.json` | coc.nvim の Git サイン設定 |
+| ファイル | 配置先 | 内容 |
+|---|---|---|
+| `.zshrc` | `~/.zshrc` | Zsh (Zinit + fzf + vi-mode) |
+| `.tmux.conf` | `~/.tmux.conf` | tmux (Kanagawa-Dragon テーマ + Vim風操作) |
+| `init.vim` | `~/.config/nvim/init.vim` | Neovim (vim-plug + coc.nvim + fzf) |
+| `coc-settings.json` | `~/.config/nvim/coc-settings.json` | coc.nvim の Git サイン設定 |
 
 ## Zsh
 
@@ -75,12 +75,26 @@ brew install --cask font-hack-nerd-font
 - `zsh-syntax-highlighting` - シンタックスハイライト
 - `zsh-vi-mode` - Vi キーバインド
 
+**エイリアス**:
+| コマンド | 展開先 |
+|---|---|
+| `vim` | `nvim` |
+| `ll` | `ls -la` |
+
 **fzf キーバインド**:
 | キー | 機能 |
 |---|---|
 | `Ctrl+R` | コマンド履歴検索 |
 | `Ctrl+T` | ファイル検索 |
 | `Ctrl+G` | ディレクトリ移動 |
+
+**Vi ノーマルモード (Esc で切替)**:
+| キー | 機能 |
+|---|---|
+| `H` | 前のWORDへ (空白区切り) |
+| `L` | 次のWORDへ (空白区切り) |
+| `Ctrl+h` | 1単語戻る |
+| `Ctrl+l` | 1単語進む |
 
 ## tmux
 
@@ -118,15 +132,40 @@ brew install --cask font-hack-nerd-font
 - [fzf.vim](https://github.com/junegunn/fzf.vim) - ファジーファインダー
 - [markdown-preview.nvim](https://github.com/iamcco/markdown-preview.nvim) - Markdown プレビュー
 
-### 主要キーバインド
+### 移動
+
+| | 左 | 下 | 上 | 右 |
+|---|---|---|---|---|
+| **そのまま** | `h` 1文字 | `j` 1行 | `k` 1行 | `l` 1文字 |
+| **Ctrl** | `Ctrl+h` 1単語戻る | `Ctrl+j` スクロール↓ | `Ctrl+k` スクロール↑ | `Ctrl+l` 1単語進む |
+| **Shift** | `H` 行頭 | `J` ファイル末尾 | `K` ファイル先頭 | `L` 行末 |
+
+### 検索・置換
 
 | キー | 機能 |
 |---|---|
-| `Ctrl+o` | Git ファイル検索 (fzf) |
-| `Ctrl+s` | Ripgrep 検索 (fzf) |
-| `Ctrl+u / Ctrl+d` | スムーズスクロール |
-| `Ctrl+p` (markdown) | Markdown プレビュー |
+| `Ctrl+f` | ファイル内検索 |
+| `F` | fzf でファイル内検索 (部分一致) |
+| `Ctrl+s` | Ripgrep でプロジェクト横断検索 |
+| `Ctrl+o` | Git ファイル名検索 |
+| `Tab` / `Shift+Tab` | 検索マッチの次 / 前 |
+| `Esc` | 検索ハイライト解除 |
+| `s` | 確認付き置換 (カーソル下の単語) |
+| `S` | 一括置換 (カーソル下の単語) |
+
+ビジュアルモードでは選択テキストが置換対象になる。`s` は選択範囲内、`S` はファイル全体で確認付き置換。
+
+### LSP (coc.nvim)
+
+| キー | 機能 |
+|---|---|
 | `gd` | 定義へジャンプ |
 | `gy` | 型定義へジャンプ |
 | `gi` | 実装へジャンプ |
 | `gr` | 参照一覧 |
+
+### その他
+
+| キー | 機能 |
+|---|---|
+| `Ctrl+p` (markdown) | Markdown プレビュー |

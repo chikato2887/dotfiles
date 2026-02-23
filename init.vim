@@ -76,9 +76,35 @@ inoremap < <><ESC>i
 
 " Move by display lines
 nnoremap k gk
-nnoremap gk k
 nnoremap j gj
-nnoremap gj j
+
+" Tab / Shift+Tab = 検索マッチの次 / 前
+nnoremap <Tab> n
+nnoremap <S-Tab> N
+nnoremap <Esc> :nohlsearch<CR>
+
+" Shift+hjkl = 行頭 / ファイル末尾 / ファイル先頭 / 行末
+nnoremap H ^
+nnoremap J G
+nnoremap K gg
+nnoremap L $
+vnoremap H ^
+vnoremap J G
+vnoremap K gg
+vnoremap L $
+
+" s = 確認付き置換 / S = 一括置換 (カーソル下の単語)
+nnoremap s :%s/<C-r><C-w>//gc<Left><Left><Left>
+nnoremap S :%s/<C-r><C-w>//g<Left><Left>
+" ビジュアルモード: 選択テキストで置換
+vnoremap s "zy:'<,'>s/<C-r>z//gc<Left><Left><Left>
+vnoremap S "zy:%s/<C-r>z//gc<Left><Left><Left>
+
+" Ctrl+hjkl = 単語移動 / スクロール (Ctrl+J/K は Smooth Scroll セクションで定義)
+nnoremap <C-h> b
+nnoremap <C-l> w
+vnoremap <C-h> b
+vnoremap <C-l> w
 
 " Tab navigation
 nnoremap <C-S-t> :tabprevious<CR>
@@ -109,10 +135,10 @@ function! s:smooth_scroll(fn) abort
   let s:smooth_scroll_timer = timer_start(s:stop_time, function('s:' . a:fn), {'repeat' : &scroll/3})
 endfunction
 
-nnoremap <silent> <C-u> <cmd>call <SID>smooth_scroll('up')<CR>
-nnoremap <silent> <C-d> <cmd>call <SID>smooth_scroll('down')<CR>
-vnoremap <silent> <C-u> <cmd>call <SID>smooth_scroll('up')<CR>
-vnoremap <silent> <C-d> <cmd>call <SID>smooth_scroll('down')<CR>
+nnoremap <silent> <C-k> <cmd>call <SID>smooth_scroll('up')<CR>
+nnoremap <silent> <C-j> <cmd>call <SID>smooth_scroll('down')<CR>
+vnoremap <silent> <C-k> <cmd>call <SID>smooth_scroll('up')<CR>
+vnoremap <silent> <C-j> <cmd>call <SID>smooth_scroll('down')<CR>
 
 """""""""""""""""""""""""
 " Colorscheme
@@ -158,6 +184,8 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<C
 """""""""""""""""""""""""
 nnoremap <C-o> :GFiles<Enter>
 nnoremap <C-s> :Rg<Enter>
+nnoremap <C-f> /
+nnoremap F :call fzf#vim#buffer_lines('', {'options': '--exact'})<CR>
 
 """""""""""""""""""""""""
 " Markdown Preview (browser-based)
