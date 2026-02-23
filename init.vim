@@ -18,6 +18,7 @@ Plug 'tpope/vim-surround'
 Plug 'ryanoasis/vim-devicons'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug'] }
 
 call plug#end()
 
@@ -157,3 +158,9 @@ inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm() : "\<C-g>u\<C
 """""""""""""""""""""""""
 nnoremap <C-o> :GFiles<Enter>
 nnoremap <C-s> :Rg<Enter>
+
+"""""""""""""""""""""""""
+" Markdown Preview (browser-based)
+"""""""""""""""""""""""""
+let g:mkdp_auto_close = 0
+autocmd FileType markdown nnoremap <buffer> <silent> <C-p> :MarkdownPreview<CR>
